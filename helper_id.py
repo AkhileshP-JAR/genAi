@@ -1,7 +1,8 @@
 import pdfplumber
 import requests
 import streamlit as st
-
+import io
+import base64
 
 
 print("loading the function from helper")
@@ -27,7 +28,7 @@ def image_to_base64(image):
     return base64.b64encode(buffered.getvalue()).decode("utf-8")
 
 
-def make_prompt(version,question,content):
+def make_prompt(version:str) -> str:
     """
     Create actual prompt
     """
@@ -35,17 +36,17 @@ def make_prompt(version,question,content):
     if version.startswith("v1"):
         return  """ Answer the question based on the content provided and guess if required """
     
-    if v.startswith("v2"):
+    if version.startswith("v2"):
         return """ Extract the text from the image and provide the text."""
-def call_ollama(ollama_server,model, prompt, temperature,max_tokens=512):
+def call_ollama(ollama_server,model, prompt, b64img, temperature):
     api_url=f"{ollama_server}/api/generate"
     payload={
         "model":model,
         "prompt":prompt,
+        "images": [b64img],
         #"temperature":temperature,
         "stream":False,
-        "options":{"temperature":temperature,"num_predict":
-                   max_tokens}
+        "options":{"temperature":temperature}
 
     }
     answer=requests.post(api_url,json=payload,timeout=120)
