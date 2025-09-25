@@ -20,7 +20,7 @@ left,right=st.columns(2,gap="large")
 
 
 with left:
-    st.title("PDF-> ASK-> ANSWER")
+    st.title("Image-> ANSWER") 
     #up is the pdf file 
     up=st.file_uploader("PDF upload",type=["jpeg","jpg","png"])
     if up:
